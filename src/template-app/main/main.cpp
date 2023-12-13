@@ -28,4 +28,10 @@
 extern "C" void app_main(void)
 {
 
+
+    for (;;)
+    {
+        printf("DEBUG: vTaskDelay(5000 ms) \r\n");
+        vTaskDelay( pdMS_TO_TICKS ( 5000 ) ); // 5 seg
+    }
 }
