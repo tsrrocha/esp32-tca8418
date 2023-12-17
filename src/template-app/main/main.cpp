@@ -14,6 +14,7 @@
 #include "freertos/queue.h"
 #include "freertos/task.h"
 #include "i2cbase/i2c.h"
+#include "keypad/keypad.h"
 //#include "gpio/gpio.h"
 //#include "status/status.h"
 //#include "oled/oled.h"
@@ -28,6 +29,10 @@
 extern "C" void app_main(void)
 {
 
+
+    //i2c_master_init();
+    KeypadConfig();
+    KeypadInit();
 
     for (;;)
     {
