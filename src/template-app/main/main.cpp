@@ -29,6 +29,7 @@
 extern "C" void app_main(void)
 {
     uint8_t d = 0;
+    uint8_t qtyEvent = 0;
 
     //i2c_master_init();
     KeypadConfig();
@@ -38,19 +39,27 @@ extern "C" void app_main(void)
 
     for (;;)
     {
-        d = 0;
-        d = KeypadRead (TCA8418_CFG_REG);
-        printf("DEBUG: CFG: %d \r\n", d);
+        //d = 0;
+        //d = KeypadRead (TCA8418_CFG_REG);
+        //printf("DEBUG: CFG: %d \r\n", d);
+
+        //d = 0;
+        //d = KeypadRead (TCA8418_INT_STAT_REG);
+        //printf("DEBUG: INT_STAT: %d \r\n", d);
 
         d = 0;
-        d = KeypadRead (TCA8418_INT_STAT_REG);
-        printf("DEBUG: INT_STAT: %d \r\n", d);
+        qtyEvent = (KeypadRead (TCA8418_KEY_LCK_EC_REG) & 0x0F);
+        //printf("DEBUG: KEY_LCK_EC: %d \r\n", qtyEvent);
 
-        d = 0;
-        d = KeypadRead (TCA8418_KEY_LCK_EC_REG);
-        printf("DEBUG: KEY_LCK_EC: %d \r\n", d);
+        if (qtyEvent > 0) {
+            for (uint8_t idx = 0; idx < qtyEvent; idx++ ) {
+                d = 0;
+                d = KeypadRead (TCA8418_KEY_EVENT_A_REG);
+                printf("DEBUG: Tecla: %d - (%d)\r\n", (d & 0x7F), (d & 0x80));
+            }
+        }
 
-        printf("DEBUG: vTaskDelay(1000 ms) \r\n");
+        //printf("DEBUG: vTaskDelay(1000 ms) \r\n");
         vTaskDelay( pdMS_TO_TICKS ( 1000 ) ); // 5 seg
 
 
