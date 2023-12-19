@@ -28,15 +28,31 @@
 
 extern "C" void app_main(void)
 {
-
+    uint8_t d = 0;
 
     //i2c_master_init();
     KeypadConfig();
     KeypadInit();
 
+
+
     for (;;)
     {
-        printf("DEBUG: vTaskDelay(5000 ms) \r\n");
-        vTaskDelay( pdMS_TO_TICKS ( 5000 ) ); // 5 seg
+        d = 0;
+        d = KeypadRead (TCA8418_CFG_REG);
+        printf("DEBUG: CFG: %d \r\n", d);
+
+        d = 0;
+        d = KeypadRead (TCA8418_INT_STAT_REG);
+        printf("DEBUG: INT_STAT: %d \r\n", d);
+
+        d = 0;
+        d = KeypadRead (TCA8418_KEY_LCK_EC_REG);
+        printf("DEBUG: KEY_LCK_EC: %d \r\n", d);
+
+        printf("DEBUG: vTaskDelay(1000 ms) \r\n");
+        vTaskDelay( pdMS_TO_TICKS ( 1000 ) ); // 5 seg
+
+
     }
 }

@@ -15,5 +15,7 @@
 
 esp_err_t KeypadConfig( void );
 void KeypadInit(void);
+void KeypadWriteByte( uint8_t reg_addr, uint8_t data );
+uint8_t KeypadRead( uint8_t address );
 
 #endif
