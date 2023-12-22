@@ -1,5 +1,48 @@
 #include "keypad.h"
 
+/*const char static keys[] = {
+	'',
+	'0',	// 32
+	'1',	// 1
+	'2',	// 2
+	'3',	// 3
+	'4',	// 11
+	'5',	// 12
+	'6',	// 13
+	'7',	// 21
+	'8',	// 22
+	'9',	// 23
+	'A',	// 4
+	'B',	// 14
+	'C',	// 24
+	'D',	// 34
+	'#',	// 33
+	'*',	// 31
+	''
+};//*/
+
+const uint8_t keymaps[20] = {
+	0,
+	32, 	// 0 Released
+	1, 		// 1 Released
+	2,		// 2 Released
+	3,		// 3 Released
+	11, 	// 4 Released
+	12, 	// 5 Released
+	13, 	// 6 Released
+	21, 	// 7 Released
+	22, 	// 8 Released
+	23, 	// 9 Released
+	 4,		// A Released
+	14, 	// B Released
+	24, 	// C Released
+	34, 	// D Released
+	33, 	// # Released
+	161, 	// # Pressed
+	31, 	// * Released
+	159, 	// * Pressed
+	0
+};
 
 esp_err_t KeypadConfig( void )
 {

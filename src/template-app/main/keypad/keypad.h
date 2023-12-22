@@ -12,6 +12,29 @@
 #define tag "I2C"
 #define TCA8418_ADDR    0x34 // W=0x68 & R=0x69
 
+typedef enum {
+    NO_KEY = 0,
+    KEY_0_RELEASED,
+    KEY_1_RELEASED,
+    KEY_2_RELEASED,
+    KEY_3_RELEASED,
+    KEY_4_RELEASED,
+    KEY_5_RELEASED,
+    KEY_6_RELEASED,
+    KEY_7_RELEASED,
+    KEY_8_RELEASED,
+    KEY_9_RELEASED,
+    KEY_A_RELEASED,
+    KEY_B_RELEASED,
+    KEY_C_RELEASED,
+    KEY_D_RELEASED,
+    KEY_HASH_RELEASED,
+    KEY_HASH_PRESSED,
+    KEY_AST_RELEASED,
+    KEY_AST_PRESSED,
+    UNKNOWN_KEY
+} KeyEnum_t;
+
 
 esp_err_t KeypadConfig( void );
 void KeypadInit(void);

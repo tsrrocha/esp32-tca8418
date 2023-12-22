@@ -59,6 +59,10 @@ extern "C" void app_main(void)
             }
         }
 
+        // Depois de ler as teclas, ocasionadas pela interrupção, deve-se escrever no INT_STAT para o
+        // pino /INT voltar ao estado normal.
+        KeypadWriteByte( TCA8418_INT_STAT_REG, (INT_STAT_K_INT) );
+
         //printf("DEBUG: vTaskDelay(1000 ms) \r\n");
         vTaskDelay( pdMS_TO_TICKS ( 1000 ) ); // 5 seg
 
