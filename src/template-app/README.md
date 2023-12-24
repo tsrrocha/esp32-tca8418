@@ -1,4 +1,8 @@
-# _Sample project_
+# TCA8418 using ESP32
+
+This project using the integrated circuit (IC) TCA8418, a keypad scanner with I2C interface. 
+
+
 
 (See the README.md file in the upper level 'examples' directory for more information about examples.)
 
