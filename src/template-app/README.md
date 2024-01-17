@@ -1,5 +1,9 @@
 # KeyPad with ESP32 using TCA
 
+This project using the integrated circuit (IC) TCA8418, a keypad scanner with I2C interface. 
+
+
+
 (See the README.md file in the upper level 'examples' directory for more information about examples.)
 
 This is the simplest buildable example. The example is used by command `idf.py create-project`
