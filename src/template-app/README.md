@@ -1,4 +1,4 @@
-# _Sample project_
+# KeyPad with ESP32 using TCA
 
 (See the README.md file in the upper level 'examples' directory for more information about examples.)
 
