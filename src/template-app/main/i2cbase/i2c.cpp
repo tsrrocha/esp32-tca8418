@@ -51,8 +51,11 @@ void i2c_master_init(uint16_t sda, uint16_t scl )
 static void prvI2CGatekeeperTask (void *pvParameters)
 {
 	void* pvI2CEvent;
-	for (;;) {
-		
+
+	// Cria a fila de eventos 
+	xI2CEventQueue = QueueCreate(10, sizeof(I2CEvent));
+
+	for (;;) {		
 		xQueueReceive (xI2CEventQueue, &pvI2CEvent, portMAX_DELAY);
 	}
 }

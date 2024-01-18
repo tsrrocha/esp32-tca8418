@@ -1,6 +1,24 @@
-# KeyPad with ESP32 using TCA
+# KeyPad with ESP32 using TCA8418
 
-This project using the integrated circuit (IC) TCA8418, a keypad scanner with I2C interface. 
+This project uses the integrated circuit (IC) TCA8418, a keypad scanner with I2C interface, for keypad 4 columns per 4 rows (4x4).
+I write a I2C gatekeeper to control the use of I2C bus. Only the gatekeeper can use the resource I2C bus.
+
+## Pinout
+
+In this project, the GPIO pins for I2C communication interface are 21 and 22. The pin 21 is SDA (data) and pin 22 is SCL (clock).
+
+
+|Pinout|Name|Description||
+|:----:|:---:|:---|:---|
+|21|SDA (data)|The Data pin for I2c communication||
+|22|SCL (clock)|The Clock pin for I2c communication||
+|17|INT (Interrupt keypad)|The interrupt pin when any key is pressed||
+
+
+## OK
+
+
+
 
 
 
