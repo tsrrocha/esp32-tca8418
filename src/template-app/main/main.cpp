@@ -24,12 +24,23 @@
 //#include "leds/leds.h"
 //#include "buzzer/buzzer.h"
 //#include "config.h"
+#include "maintypes.h"
+
+
+I2CEvent evKeypad;
 
 
 extern "C" void app_main(void)
 {
     uint8_t d = 0;
     uint8_t qtyEvent = 0;
+
+    //
+    memset(&evKeypad, 0, sizeof(I2CEvent));
+    evKeypad.type = I2CEventType::I2CEV_KEYPAD_READKEY;
+    
+    
+
 
     KeypadConfig();
     KeypadInit();

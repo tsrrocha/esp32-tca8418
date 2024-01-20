@@ -18,7 +18,7 @@
 
 #define tag "I2C"
 
-xQueue_t xI2CEventQueue;
+QueueHandle_t I2CEventQueue;
 
 /**
  * 
@@ -53,9 +53,9 @@ static void prvI2CGatekeeperTask (void *pvParameters)
 	void* pvI2CEvent;
 
 	// Cria a fila de eventos 
-	xI2CEventQueue = QueueCreate(10, sizeof(I2CEvent));
+	I2CEventQueue = xQueueCreate(10, sizeof(I2CEvent));
 
 	for (;;) {		
-		xQueueReceive (xI2CEventQueue, &pvI2CEvent, portMAX_DELAY);
+		xQueueReceive (I2CEventQueue, &pvI2CEvent, portMAX_DELAY);
 	}
 }
