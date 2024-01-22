@@ -32,6 +32,13 @@
  * @param sda 
  * @param scl 
  */
-void i2c_master_init(uint16_t sda, uint16_t scl);
+//void i2c_init(uint16_t sda, uint16_t scl);
+
+/**
+ * @brief Esta função é uma Task responsável por controlar o acesso ao recurso I2C.
+ * 
+ * @param pvParameters 
+ */
+void prvI2CGatekeeperTask (void *pvParameters);
 
 #endif

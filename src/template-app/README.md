@@ -3,6 +3,7 @@
 This project uses the integrated circuit (IC) TCA8418, a keypad scanner with I2C interface, for keypad 4 columns per 4 rows (4x4).
 I write a I2C gatekeeper to control the use of I2C bus. Only the gatekeeper can use the resource I2C bus.
 
+
 ## Pinout
 
 In this project, the GPIO pins for I2C communication interface are 21 and 22. The pin 21 is SDA (data) and pin 22 is SCL (clock).

@@ -27,7 +27,7 @@ QueueHandle_t I2CEventQueue;
  * @param sda 
  * @param scl 
  */
-void i2c_master_init(uint16_t sda, uint16_t scl )
+static void i2c_init(uint16_t sda, uint16_t scl )
 {
 	i2c_config_t i2c_config = {};
 	i2c_config.mode = I2C_MODE_MASTER;
@@ -48,14 +48,17 @@ void i2c_master_init(uint16_t sda, uint16_t scl )
  * 
  * @param pvParameters 
  */
-static void prvI2CGatekeeperTask (void *pvParameters)
+void prvI2CGatekeeperTask (void *pvParameters)
 {
 	void* pvI2CEvent;
 
 	// Cria a fila de eventos 
 	I2CEventQueue = xQueueCreate(10, sizeof(I2CEvent));
+	// Configura e instala o driver I2C.
+	i2c_init(CONFIG_SDA_GPIO, CONFIG_SCL_GPIO);
 
-	for (;;) {		
+	for (;;) {
 		xQueueReceive (I2CEventQueue, &pvI2CEvent, portMAX_DELAY);
+
 	}
 }

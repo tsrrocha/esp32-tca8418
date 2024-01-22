@@ -46,7 +46,7 @@ const uint8_t keymaps[20] = {
 
 esp_err_t KeypadConfig( void )
 {
-    i2c_master_init(CONFIG_SDA_GPIO, CONFIG_SCL_GPIO);
+    //i2c_master_init(CONFIG_SDA_GPIO, CONFIG_SCL_GPIO);
     return ESP_OK;
 }
 
@@ -76,7 +76,8 @@ void KeypadWriteByte( uint8_t reg_addr, uint8_t data )
 	i2c_master_stop(cmd);
 
 	// Send command
-	esp_err_t espRc = i2c_master_cmd_begin(I2C_NUM, cmd, 10/portTICK_PERIOD_MS);
+	//esp_err_t espRc = i2c_master_cmd_begin(I2C_NUM, cmd, 10/portTICK_PERIOD_MS);
+	i2c_master_cmd_begin(I2C_NUM, cmd, 10/portTICK_PERIOD_MS);
 
 	/*if (espRc == ESP_OK) {
 		ESP_LOGI(tag, "Keypad configured successfully");
@@ -104,7 +105,8 @@ uint8_t KeypadRead( uint8_t address )
 	i2c_master_stop(cmd);
 
 	// Send command
-	esp_err_t espRc = i2c_master_cmd_begin(I2C_NUM, cmd, 10/portTICK_PERIOD_MS);
+	//esp_err_t espRc = i2c_master_cmd_begin(I2C_NUM, cmd, 10/portTICK_PERIOD_MS);
+	i2c_master_cmd_begin(I2C_NUM, cmd, 10/portTICK_PERIOD_MS);
 
 	/*if (espRc == ESP_OK) {
 		ESP_LOGI(tag, "Keypad configured successfully");

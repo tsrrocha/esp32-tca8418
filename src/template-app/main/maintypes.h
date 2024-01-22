@@ -16,19 +16,22 @@
 
 
 /**
- * @brief 
+ * @brief Enumerator para os tipos de eventos enviados para o Gatekeeper do barramento I2C.
  * 
  */
 typedef enum {
-    I2C_EV_NOEVENT = 0,
-    I2C_EV_KEYPAD,
-    I2CEV_KEYPAD_READKEY,
-    I2C_EV_EEPROM,
-    I2C_EV_DISPLAY,
-    I2C_EV_UNKNOWN
+    I2CEV_NOEVENT = 0,          // Nenhum evento
+    I2CEV_KEYPAD_READKEY,       // Evento para leitura das teclas pressionadas no teclado
+    I2CEV_EEPROM,
+    I2CEV_DISPLAY,
+    I2CEV_UNKNOWN
 } I2CEventType;
 
 
+/**
+ * @brief Estrutura de dados que representa uma tecla pressionada ou liberada.
+ * 
+ */
 typedef struct {
     uint8_t key;
     struct {
@@ -37,7 +40,7 @@ typedef struct {
 } Key;
 
 /**
- * @brief 
+ * @brief Estrutura de dados que representa dados de um evento I2C do teclado.
  * 
  */
 typedef struct {
@@ -46,7 +49,7 @@ typedef struct {
 } I2CKeypadEvent;
 
 /**
- * @brief 
+ * @brief Estrutura de dados que representa dados de um evento I2C da memória E2PROM.
  * 
  */
 typedef struct {
@@ -54,7 +57,7 @@ typedef struct {
 } I2CEEPROMEvent;
 
 /**
- * @brief 
+ * @brief Estrutura de dados que representa dados de um evento I2C do display.
  * 
  */
 typedef struct {
@@ -62,7 +65,8 @@ typedef struct {
 } I2CDisplayEvent;
 
 /**
- * @brief 
+ * @brief Estrutura de dados que representa um evento genérico do I2C. 
+ *  Por ser genérico, os dados que o evento armazena pode ser um evento de teclado, de memória E2PROM ou de display.
  * 
  */
 typedef struct {

@@ -25,28 +25,43 @@
 //#include "buzzer/buzzer.h"
 //#include "config.h"
 #include "maintypes.h"
+#include "stdout/stdOutGatekeeper.h"
 
 
 I2CEvent evKeypad;
 
+extern QueueHandle_t StdOutQueue;
+
 
 extern "C" void app_main(void)
 {
+    char msg[30];
+
     uint8_t d = 0;
     uint8_t qtyEvent = 0;
 
+    
     //
-    memset(&evKeypad, 0, sizeof(I2CEvent));
-    evKeypad.type = I2CEventType::I2CEV_KEYPAD_READKEY;
+    memset(&msg, 0, sizeof(msg));
+
+    //
+    //memset(&evKeypad, 0, sizeof(I2CEvent));
+    //evKeypad.type = I2CEventType::I2CEV_KEYPAD_READKEY;
     
-    
+    // Cria a Task que é responsável por enviar textos para a saida padrao (stdout)
+    xTaskCreate ( prvStdOutGatekeeperTask, "Stdout", 1000, (void *) 1, 5, NULL );
+
+    sprintf(msg, "Inicializando...");
+    //xQueueSendToBack(StdOutQueue, &msg, portMAX_DELAY);
+    // 
 
 
-    KeypadConfig();
-    KeypadInit();
+    //KeypadConfig();
+    //KeypadInit();
 
     for (;;)
     {
+        /*
         d = 0;
         qtyEvent = (KeypadRead (TCA8418_KEY_LCK_EC_REG) & 0x0F);
         //printf("DEBUG: KEY_LCK_EC: %d \r\n", qtyEvent);
@@ -62,6 +77,7 @@ extern "C" void app_main(void)
         // Depois de ler as teclas, ocasionadas pela interrupção, deve-se escrever no INT_STAT para o
         // pino /INT voltar ao estado normal.
         KeypadWriteByte( TCA8418_INT_STAT_REG, (INT_STAT_K_INT) );
+        //*/
 
         //printf("DEBUG: vTaskDelay(1000 ms) \r\n");
         vTaskDelay( pdMS_TO_TICKS ( 1000 ) ); // 5 seg
