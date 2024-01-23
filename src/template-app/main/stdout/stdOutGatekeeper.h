@@ -13,7 +13,7 @@
  * 
  * @param pvParameters 
  */
-void prvStdOutGatekeeperTask (void *pvParameters);
+void prvStdOutGatekeeperTask (void * pvQueue);
 
 
 

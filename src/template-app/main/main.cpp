@@ -10,6 +10,8 @@
 
 /** INCLUDES    */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include "freertos/task.h"
@@ -27,34 +29,43 @@
 #include "maintypes.h"
 #include "stdout/stdOutGatekeeper.h"
 
+#define MAX_SIZE_STDOUT 50
+#define MAX_TASK_DELAY 5000
+
+
 
 I2CEvent evKeypad;
 
-extern QueueHandle_t StdOutQueue;
-
+QueueHandle_t StdOutQueue;
 
 extern "C" void app_main(void)
 {
-    char msg[30];
-
+    // Variável para envio de mensagens para a saida padrao STDOUT.
+    char *msg =  (char *)( malloc( (size_t)((sizeof(char *) * MAX_SIZE_STDOUT) + 1 )) );
+    
     uint8_t d = 0;
     uint8_t qtyEvent = 0;
 
     
-    //
-    memset(&msg, 0, sizeof(msg));
+    // Inicializa a MSG
+    memset((void *)(msg), '\0', (  (size_t)((sizeof(char *) * MAX_SIZE_STDOUT) + 1 ) ));
 
+    StdOutQueue = xQueueCreate(5, sizeof(char *));
+    
     //
     //memset(&evKeypad, 0, sizeof(I2CEvent));
     //evKeypad.type = I2CEventType::I2CEV_KEYPAD_READKEY;
     
-    // Cria a Task que é responsável por enviar textos para a saida padrao (stdout)
-    xTaskCreate ( prvStdOutGatekeeperTask, "Stdout", 1000, (void *) 1, 5, NULL );
+    if (StdOutQueue != NULL) {
+        // Cria a Task que é responsável por enviar textos para a saida padrao (stdout)
+        xTaskCreate ( prvStdOutGatekeeperTask, "Stdout", 4096, (void *) &(StdOutQueue), 1, NULL );
+        
+        sprintf(msg, "Inicializando...");
+        xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
 
-    sprintf(msg, "Inicializando...");
-    //xQueueSendToBack(StdOutQueue, &msg, portMAX_DELAY);
-    // 
-
+        sprintf(msg, "Gatekeeper criado com sucesso!");
+        xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
+    }
 
     //KeypadConfig();
     //KeypadInit();
@@ -80,7 +91,11 @@ extern "C" void app_main(void)
         //*/
 
         //printf("DEBUG: vTaskDelay(1000 ms) \r\n");
-        vTaskDelay( pdMS_TO_TICKS ( 1000 ) ); // 5 seg
+
+        sprintf(msg, "vTaskDelay(%d)", MAX_TASK_DELAY);
+        xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
+
+        vTaskDelay( pdMS_TO_TICKS ( MAX_TASK_DELAY ) ); // 5 seg
 
 
     }

@@ -4,25 +4,27 @@
  * @brief 
  * 
  */
-QueueHandle_t StdOutQueue;
+//QueueHandle_t StdOutQueue;
 
 /**
  * @brief 
  * 
  * @param pvParameters 
  */
-void prvStdOutGatekeeperTask (void *pvParameters)
+void prvStdOutGatekeeperTask (void * pvQueue)
 {
+	// 
 	char * pcMessageToPrint;
+	// Coleta a Fila passa por parâmetro
+	QueueHandle_t * queue = (QueueHandle_t *) pvQueue ;
 
-	// Cria a fila de eventos 
-	StdOutQueue = xQueueCreate(STDOUT_QUEUE_MAXSIZE, sizeof(char *));
-	
 	for (;;) {
         // Wait to receive a new event on the queue.
-		xQueueReceive (StdOutQueue, &pcMessageToPrint, portMAX_DELAY);
+		xQueueReceive (*queue, &pcMessageToPrint, portMAX_DELAY);
+		printf("STD: %s\r\n", pcMessageToPrint);
+		//sprintf(&msg[0], "INFO: %s\r\n", pcMessageToPrint);
         // Print message into StdOut
-        printf("%s", pcMessageToPrint);
-        //fflush( stdout );
+        //printf("%s", &msg[0]);
+        fflush( stdout );
 	}
 }
