@@ -1,3 +1,13 @@
+/**
+ * @file keypad.h
+ * @author Tiago Sousa Rocha (tsrrocha@gmail.com)
+ * @brief 
+ * @version 1.0
+ * @date 23/01/2024
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 #ifndef _KEYPAD_H_
 #define _KEYPAD_H_
 

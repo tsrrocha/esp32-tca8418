@@ -29,46 +29,66 @@
 #include "maintypes.h"
 #include "stdout/stdOutGatekeeper.h"
 
+
+#define INCLUDE_vTaskSuspend 1
+
 #define MAX_SIZE_STDOUT 50
-#define MAX_TASK_DELAY 5000
+#define MAX_TASK_DELAY 1000
 
 
 
-I2CEvent evKeypad;
+I2CEvent *evKeypad;
 
 QueueHandle_t StdOutQueue;
+QueueHandle_t I2CEventQueue;
 
 extern "C" void app_main(void)
 {
-    // Variável para envio de mensagens para a saida padrao STDOUT.
-    char *msg =  (char *)( malloc( (size_t)((sizeof(char *) * MAX_SIZE_STDOUT) + 1 )) );
-    
+    uint8_t idx = 0;
     uint8_t d = 0;
     uint8_t qtyEvent = 0;
 
+    // Variável para envio de mensagens para a saida padrao STDOUT.
+    char *msg =  (char *)( malloc( (size_t)((sizeof(char *) * MAX_SIZE_STDOUT) + 1 )) );
+    //
+    evKeypad =  (I2CEvent *)( malloc( sizeof(I2CEvent) ) );
     
     // Inicializa a MSG
     memset((void *)(msg), '\0', (  (size_t)((sizeof(char *) * MAX_SIZE_STDOUT) + 1 ) ));
-
+    //
+    memset(evKeypad, 0, sizeof(I2CEvent));
+    
     StdOutQueue = xQueueCreate(5, sizeof(char *));
+    I2CEventQueue = xQueueCreate(10, sizeof(I2CEvent *));
+
+    //
+    evKeypad->type = I2CEventType::I2CEV_KEYPAD_READKEY;
     
     //
     //memset(&evKeypad, 0, sizeof(I2CEvent));
     //evKeypad.type = I2CEventType::I2CEV_KEYPAD_READKEY;
     
-    if (StdOutQueue != NULL) {
+    if ((StdOutQueue != NULL) && (I2CEventQueue != NULL )){
         // Cria a Task que é responsável por enviar textos para a saida padrao (stdout)
-        xTaskCreate ( prvStdOutGatekeeperTask, "Stdout", 4096, (void *) &(StdOutQueue), 1, NULL );
+        xTaskCreate ( prvStdOutGatekeeperTask, "StdoutGatekeeper", 4096, (void *) &(StdOutQueue), 2, NULL );
+        // 
+        xTaskCreate ( prvI2CGatekeeperTask, "I2CGatekeeper", 4096, (void *) &(I2CEventQueue), 0, NULL );
         
         sprintf(msg, "Inicializando...");
-        xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
+        xQueueSendToBack(StdOutQueue, &(msg), 0);
 
-        sprintf(msg, "Gatekeeper criado com sucesso!");
+        sprintf(msg, "Gatekeepers criado com sucesso!");
         xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
     }
 
-    //KeypadConfig();
-    //KeypadInit();
+    sprintf(msg, "Aguarda a instalação do I2C Driver!");
+    xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
+    vTaskDelay( pdMS_TO_TICKS ( 2000 ) );
+
+    // 
+    KeypadConfig();
+    KeypadInit();
+
 
     for (;;)
     {
@@ -92,9 +112,24 @@ extern "C" void app_main(void)
 
         //printf("DEBUG: vTaskDelay(1000 ms) \r\n");
 
+        if (idx >=9) {
+            evKeypad->type = I2CEventType::I2CEV_KEYPAD_READKEY;
+            //
+            if (xQueueSendToBack(I2CEventQueue, &(evKeypad), portMAX_DELAY) == pdTRUE)
+            {
+                sprintf(msg, "I2CEvent sent successfully! %d, qty=%d", evKeypad->type, evKeypad->data.keypad.qty);
+                xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);    
+            }
+            idx = 0;
+        } else {
+            idx++;
+        }
+
+        //
         sprintf(msg, "vTaskDelay(%d)", MAX_TASK_DELAY);
         xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
 
+        //
         vTaskDelay( pdMS_TO_TICKS ( MAX_TASK_DELAY ) ); // 5 seg
 
 

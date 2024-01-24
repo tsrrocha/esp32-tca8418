@@ -9,12 +9,12 @@
 /**
  * @brief 
  * 
- * @param pvParameters 
+ * @param pvQueue 
  */
 void prvStdOutGatekeeperTask (void * pvQueue)
 {
 	// 
-	char * pcMessageToPrint;
+	char *pcMessageToPrint;
 	// Coleta a Fila passa por parâmetro
 	QueueHandle_t * queue = (QueueHandle_t *) pvQueue ;
 
@@ -22,9 +22,6 @@ void prvStdOutGatekeeperTask (void * pvQueue)
         // Wait to receive a new event on the queue.
 		xQueueReceive (*queue, &pcMessageToPrint, portMAX_DELAY);
 		printf("STD: %s\r\n", pcMessageToPrint);
-		//sprintf(&msg[0], "INFO: %s\r\n", pcMessageToPrint);
-        // Print message into StdOut
-        //printf("%s", &msg[0]);
         fflush( stdout );
 	}
 }

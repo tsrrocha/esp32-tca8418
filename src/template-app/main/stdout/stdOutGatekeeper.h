@@ -11,7 +11,7 @@
 /**
  * @brief 
  * 
- * @param pvParameters 
+ * @param pvQueue 
  */
 void prvStdOutGatekeeperTask (void * pvQueue);
 

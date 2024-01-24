@@ -37,8 +37,8 @@
 /**
  * @brief Esta função é uma Task responsável por controlar o acesso ao recurso I2C.
  * 
- * @param pvParameters 
+ * @param pvQueue 
  */
-void prvI2CGatekeeperTask (void *pvParameters);
+void prvI2CGatekeeperTask (void *pvQueue);
 
 #endif

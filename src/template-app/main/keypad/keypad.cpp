@@ -1,25 +1,14 @@
+/**
+ * @file keypad.cpp
+ * @author Tiago Sousa Rocha (tsrrocha@gmail.com)
+ * @brief 
+ * @version 1.0
+ * @date 23/01/2024
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 #include "keypad.h"
-
-/*const char static keys[] = {
-	'',
-	'0',	// 32
-	'1',	// 1
-	'2',	// 2
-	'3',	// 3
-	'4',	// 11
-	'5',	// 12
-	'6',	// 13
-	'7',	// 21
-	'8',	// 22
-	'9',	// 23
-	'A',	// 4
-	'B',	// 14
-	'C',	// 24
-	'D',	// 34
-	'#',	// 33
-	'*',	// 31
-	''
-};//*/
 
 const uint8_t keymaps[20] = {
 	0,
@@ -44,13 +33,20 @@ const uint8_t keymaps[20] = {
 	0
 };
 
+/**
+ * @brief 
+ * 
+ * @return esp_err_t 
+ */
 esp_err_t KeypadConfig( void )
 {
-    //i2c_master_init(CONFIG_SDA_GPIO, CONFIG_SCL_GPIO);
     return ESP_OK;
 }
 
-
+/**
+ * @brief 
+ * 
+ */
 void KeypadInit( void )
 {
     KeypadWriteByte( TCA8418_CFG_REG, (CFG_INT_CFG | CFG_KE_IEN) );
@@ -60,7 +56,12 @@ void KeypadInit( void )
     KeypadWriteByte( TCA8418_KP_GPIO3_REG, 0x00 );	
 }
 
-
+/**
+ * @brief 
+ * 
+ * @param reg_addr 
+ * @param data 
+ */
 void KeypadWriteByte( uint8_t reg_addr, uint8_t data )
 {
 	i2c_cmd_handle_t cmd = i2c_cmd_link_create();
@@ -88,12 +89,17 @@ void KeypadWriteByte( uint8_t reg_addr, uint8_t data )
 	i2c_cmd_link_delete(cmd);
 }//*/
 
+/**
+ * @brief 
+ * 
+ * @param address 
+ * @return uint8_t 
+ */
 uint8_t KeypadRead( uint8_t address )
 {
 	i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 	uint8_t data;
 	
-
 	i2c_master_start(cmd);
 	i2c_master_write_byte(cmd, ( TCA8418_ADDR << 1) | I2C_MASTER_WRITE, true);
 	i2c_master_write_byte(cmd, address, true);
