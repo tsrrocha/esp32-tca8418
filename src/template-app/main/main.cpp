@@ -17,7 +17,7 @@
 #include "freertos/task.h"
 #include "i2cbase/i2c.h"
 #include "keypad/keypad.h"
-//#include "gpio/gpio.h"
+#include "gpio/gpio.h"
 //#include "status/status.h"
 //#include "oled/oled.h"
 //#include "keypad/keypad.h"
@@ -79,6 +79,8 @@ extern "C" void app_main(void)
 
         sprintf(msg, "Gatekeepers criado com sucesso!");
         xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
+
+        GPIOConfig();
     }
 
     sprintf(msg, "Aguarda a instalação do I2C Driver!");
