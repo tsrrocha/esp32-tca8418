@@ -6,7 +6,7 @@
 #define CFG_KE_IEN                      0x01
 #define CFG_GPI_IEN                     0x02
 #define CFG_K_LCK_IEN                   0x04
-#define CFG_OVR_FLOW_INT                0x08
+#define CFG_OVR_FLOW_IEN                0x08
 #define CFG_INT_CFG                     0x10
 #define CFG_OVR_FLOW_M                  0x20
 #define CFG_GPI_E_CGF                   0x40

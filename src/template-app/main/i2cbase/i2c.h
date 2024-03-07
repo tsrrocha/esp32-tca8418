@@ -16,6 +16,7 @@
 #include "freertos/task.h"
 #include "driver/i2c.h"
 #include "maintypes.h"
+//#include "gpio/gpio.h"
 
 // GPIO definido para ser o SDA na comunicação I2C
 #define CONFIG_SDA_GPIO 21

@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "keypad/keypad.h"
 
 
 /**
@@ -22,6 +23,7 @@
 typedef enum {
     I2CEV_NOEVENT = 0,          // Nenhum evento
     I2CEV_KEYPAD_READKEY,       // Evento para leitura das teclas pressionadas no teclado
+    I2CEV_KEYPAD_CLEAR_INT,
     I2CEV_EEPROM,
     I2CEV_DISPLAY,
     I2CEV_UNKNOWN

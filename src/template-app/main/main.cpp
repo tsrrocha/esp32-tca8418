@@ -29,11 +29,10 @@
 #include "maintypes.h"
 #include "stdout/stdOutGatekeeper.h"
 
-
 #define INCLUDE_vTaskSuspend 1
 
 #define MAX_SIZE_STDOUT 50
-#define MAX_TASK_DELAY 1000
+#define MAX_TASK_DELAY 1000 //5000
 
 
 
@@ -47,6 +46,7 @@ extern "C" void app_main(void)
     uint8_t idx = 0;
     uint8_t d = 0;
     uint8_t qtyEvent = 0;
+    uint8_t aux = 0;
 
     // Variável para envio de mensagens para a saida padrao STDOUT.
     char *msg =  (char *)( malloc( (size_t)((sizeof(char *) * MAX_SIZE_STDOUT) + 1 )) );
@@ -59,7 +59,7 @@ extern "C" void app_main(void)
     memset(evKeypad, 0, sizeof(I2CEvent));
     
     StdOutQueue = xQueueCreate(5, sizeof(char *));
-    I2CEventQueue = xQueueCreate(10, sizeof(I2CEvent *));
+    I2CEventQueue = xQueueCreate(20, sizeof(I2CEvent *));
 
     //
     evKeypad->type = I2CEventType::I2CEV_KEYPAD_READKEY;
@@ -85,11 +85,11 @@ extern "C" void app_main(void)
 
     sprintf(msg, "Aguarda a instalação do I2C Driver!");
     xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
-    vTaskDelay( pdMS_TO_TICKS ( 2000 ) );
+    vTaskDelay( pdMS_TO_TICKS ( 500 ) );
 
     // 
     KeypadConfig();
-    KeypadInit();
+	KeypadInit();
 
 
     for (;;)
@@ -114,9 +114,8 @@ extern "C" void app_main(void)
 
         //printf("DEBUG: vTaskDelay(1000 ms) \r\n");
 
-        if (idx >=9) {
-            evKeypad->type = I2CEventType::I2CEV_KEYPAD_READKEY;
-            //
+        /*if (idx >=9) {
+            evKeypad->type = I2CEventType::I2CEV_KEYPAD_CLEAR_INT;
             if (xQueueSendToBack(I2CEventQueue, &(evKeypad), portMAX_DELAY) == pdTRUE)
             {
                 sprintf(msg, "I2CEvent sent successfully! %d, qty=%d", evKeypad->type, evKeypad->data.keypad.qty);
@@ -125,15 +124,79 @@ extern "C" void app_main(void)
             idx = 0;
         } else {
             idx++;
-        }
+        }//*/
 
         //
-        sprintf(msg, "vTaskDelay(%d)", MAX_TASK_DELAY);
+        d = !(gpio_get_level(CONFIG_GPIO_INT_KEYPAD));
+        sprintf(msg, "vTaskDelay(%d) /INT=%d", MAX_TASK_DELAY, d);
         xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
+
+        
 
         //
         vTaskDelay( pdMS_TO_TICKS ( MAX_TASK_DELAY ) ); // 5 seg
 
+        //aux = 0;
+        //aux = KeypadRead (TCA8418_CFG_REG);
+        //sprintf(msg, "[idx=%d] REG CFG %02d = %02d", idx, TCA8418_CFG_REG, aux);
+        //xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
+        //vTaskDelay( pdMS_TO_TICKS ( 1000 ) );
+
+        //aux = 0;
+        //aux = KeypadRead (TCA8418_INT_STAT_REG);
+        //sprintf(msg, "REG INT_STAT %02d = %02d", TCA8418_INT_STAT_REG, aux);
+        //xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
+        //vTaskDelay( pdMS_TO_TICKS ( 1000 ) );
+
+        
+        if (d == 1) {
+            if (idx >= 5) {
+                aux = 0;
+                aux = (KeypadRead (TCA8418_KEY_LCK_EC_REG) & 0x0F);                
+                sprintf(msg, "REG KEY_LCK_EC_REG %02d = %02d", TCA8418_KEY_LCK_EC_REG, aux);
+                xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
+
+                if (aux > 0){
+                    evKeypad->type = I2CEventType::I2CEV_KEYPAD_READKEY;
+                    if (xQueueSendFromISR(I2CEventQueue, &evKeypad, NULL))
+                    {
+                    }
+                }//*/
+                //KeypadWriteByte( TCA8418_INT_STAT_REG, ( INT_STAT_CAD_INT | INT_STAT_OVR_FLOW_INT | INT_STAT_GPI_INT | INT_STAT_K_INT | INT_STAT_K_LCK_INT ) );
+            }
+            idx++;
+        } else {
+            idx=0;
+        }
+
+        /*
+        aux = KeypadRead (TCA8418_GPIO_DAT_STAT1_REG);
+        sprintf(msg, "REG DAT_STAT1 %02X = %02d", TCA8418_GPIO_DAT_STAT1_REG, aux);
+        xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
+        vTaskDelay( pdMS_TO_TICKS ( 100 ) );
+        aux = KeypadRead (TCA8418_GPIO_DAT_STAT2_REG);
+        sprintf(msg, "REG DAT_STAT2 %02X = %02d", TCA8418_GPIO_DAT_STAT2_REG, aux);
+        xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
+        vTaskDelay( pdMS_TO_TICKS ( 100 ) );
+        aux = KeypadRead (TCA8418_GPIO_DAT_STAT3_REG);
+        sprintf(msg, "REG DAT_STAT3 %02X = %02d", TCA8418_GPIO_DAT_STAT3_REG, aux);
+        xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
+        vTaskDelay( pdMS_TO_TICKS ( 100 ) );
+        //*/
+
+
+        /*
+		aux = KeypadRead (TCA8418_INT_STAT_REG);
+		ESP_LOGD(tag, "REG INT_STAT %02d = %02d", TCA8418_INT_STAT_REG, aux);
+
+		aux = KeypadRead (TCA8418_GPIO_DAT_STAT1_REG);
+		ESP_LOGD(tag, "REG GPIO_DAT_STAT1 %02d = %02d", TCA8418_GPIO_DAT_STAT1_REG, aux);
+		aux = KeypadRead (TCA8418_GPIO_DAT_STAT2_REG);
+		ESP_LOGD(tag, "REG GPIO_DAT_STAT2 %02d = %02d", TCA8418_GPIO_DAT_STAT2_REG, aux);
+		aux = KeypadRead (TCA8418_GPIO_DAT_STAT3_REG);
+		ESP_LOGD(tag, "REG GPIO_DAT_STAT3 %02d = %02d", TCA8418_GPIO_DAT_STAT3_REG, aux);
+
+        //*/
 
     }
 }

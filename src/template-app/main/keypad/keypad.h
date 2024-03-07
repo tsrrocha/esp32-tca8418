@@ -19,32 +19,36 @@
 #include "i2cbase/i2c.h"
 #include "tca8418_reg.h"
 
-#define tag "I2C"
+//#define tag "I2C"
 #define TCA8418_ADDR    0x34 // W=0x68 & R=0x69
 
 typedef enum {
     NO_KEY = 0,
-    KEY_0_RELEASED,
-    KEY_1_RELEASED,
-    KEY_2_RELEASED,
-    KEY_3_RELEASED,
-    KEY_4_RELEASED,
-    KEY_5_RELEASED,
-    KEY_6_RELEASED,
-    KEY_7_RELEASED,
-    KEY_8_RELEASED,
-    KEY_9_RELEASED,
-    KEY_A_RELEASED,
-    KEY_B_RELEASED,
-    KEY_C_RELEASED,
-    KEY_D_RELEASED,
-    KEY_HASH_RELEASED,
-    KEY_HASH_PRESSED,
-    KEY_AST_RELEASED,
-    KEY_AST_PRESSED,
-    UNKNOWN_KEY
+    KEY_0_RELEASED = 32,
+    KEY_1_RELEASED = 1,
+    KEY_2_RELEASED = 2,
+    KEY_3_RELEASED = 3,
+    KEY_4_RELEASED = 11,
+    KEY_5_RELEASED = 12,
+    KEY_6_RELEASED = 13,
+    KEY_7_RELEASED = 21,
+    KEY_8_RELEASED = 22,
+    KEY_9_RELEASED = 23,
+    KEY_A_RELEASED = 4,
+    KEY_B_RELEASED = 14,
+    KEY_C_RELEASED = 24,
+    KEY_D_RELEASED = 34,
+    KEY_HASH_RELEASED = 33,
+    KEY_AST_RELEASED = 31
 } KeyEnum_t;
 
+
+typedef struct {
+    KeyEnum_t key;
+    struct {
+        unsigned pressed : 1;
+    } state;
+} Key_t;
 
 esp_err_t KeypadConfig( void );
 void KeypadInit(void);
