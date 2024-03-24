@@ -156,7 +156,7 @@ extern "C" void app_main(void)
                 sprintf(msg, "REG KEY_LCK_EC_REG %02d = %02d", TCA8418_KEY_LCK_EC_REG, aux);
                 xQueueSendToBack(StdOutQueue, &(msg), portMAX_DELAY);
 
-                if (aux > 0){
+                /*if (aux > 0){
                     evKeypad->type = I2CEventType::I2CEV_KEYPAD_READKEY;
                     if (xQueueSendFromISR(I2CEventQueue, &evKeypad, NULL))
                     {
